@@ -1,6 +1,8 @@
 package config
 
 import (
+	"strconv"
+
 	"github.com/spf13/viper"
 )
 
@@ -16,6 +18,7 @@ func init() {
 	initLoggerConfig()
 	initDBconfig()
 	initCommonConfig()
+	initSessionTTL()
 }
 
 func initLoggerConfig() {
@@ -23,16 +26,23 @@ func initLoggerConfig() {
 }
 
 func initDBconfig() {
-	viper.BindEnv("DB_USER")
-	viper.BindEnv("DB_PASSWD")
+	viper.SetDefault("DB_ADDR", "localhost")
 	viper.BindEnv("DB_ADDR")
+	viper.SetDefault("DB_PORT", "27017")
 	viper.BindEnv("DB_PORT")
+	viper.SetDefault("DB_NAME", "ebazarek")
 	viper.BindEnv("DB_NAME")
 }
 
 func initCommonConfig() {
 	viper.SetDefault("BIND_ADDRESS", ":4000")
 	viper.BindEnv("BIND_ADDRESS")
+
+}
+
+func initSessionTTL() {
+	viper.SetDefault("SESSION_TOKEN_TTL", "10")
+	viper.BindEnv("SESSION_TOKEN_TTL")
 }
 
 func LoggerConfig() map[string]string {
@@ -45,11 +55,15 @@ func CommonConfig() map[string]string {
 		"BIND_ADDRESS": viper.GetString("BIND_ADDRESS")}
 }
 
+func SessionTTL() (int, error) {
+	ttlstr := viper.GetString("SESSION_TOKEN_TTL")
+	return strconv.Atoi(ttlstr)
+
+}
+
 func DBconfig() map[string]string {
 	return map[string]string{
-		"DB_USER":   viper.GetString("DB_USER"),
-		"DB_PASSWD": viper.GetString("DB_PASSWD"),
-		"DB_ADDR":   viper.GetString("DB_ADDR"),
-		"DB_PORT":   viper.GetString("DB_PORT"),
-		"DB_NAME":   viper.GetString("DB_NAME")}
+		"DB_ADDR": viper.GetString("DB_ADDR"),
+		"DB_PORT": viper.GetString("DB_PORT"),
+		"DB_NAME": viper.GetString("DB_NAME")}
 }
