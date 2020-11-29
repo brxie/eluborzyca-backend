@@ -20,9 +20,31 @@ type SessionRequest struct {
 
 const sessionCookieKey = "SESSION_ID"
 
-func TestSession(w http.ResponseWriter, r *http.Request) {
+func GetSession(w http.ResponseWriter, r *http.Request) {
+	var sessionToken = ""
+
+	for _, cookie := range r.Cookies() {
+		if cookie.Name == sessionCookieKey {
+			sessionToken = cookie.Value
+			break
+		}
+	}
+	if sessionToken == "" {
+		utils.WriteMessageResponse(&w, http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized))
+		return
+	}
+
+	session, err := session.GetSession(sessionToken)
+	if err != nil {
+		utils.WriteMessageResponse(&w, http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized))
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("200 OK"))
+
+	session.Token = ""
+	json.NewEncoder(w).Encode(session)
 }
 
 func NewSession(w http.ResponseWriter, r *http.Request) {
@@ -50,29 +72,48 @@ func NewSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := addCookie(&w, sessionCookieKey, token); err != nil {
+	ttl, err := config.SessionTTL()
+	if err != nil {
 		ilog.Error(err)
 		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
 			http.StatusText(http.StatusInternalServerError)+" "+err.Error())
 		return
 	}
+	expire := time.Now().Add(time.Duration(int64(ttl) * int64(time.Second)))
+
+	setCookie(&w, sessionCookieKey, token, expire)
 
 	utils.WriteMessageResponse(&w, http.StatusOK, http.StatusText(http.StatusOK))
-
 }
 
-func addCookie(w *http.ResponseWriter, name, value string) error {
-	ttl, err := config.SessionTTL()
-	if err != nil {
-		return err
+func DestroySession(w http.ResponseWriter, r *http.Request) {
+	var sessionToken = ""
+
+	for _, cookie := range r.Cookies() {
+		if cookie.Name == sessionCookieKey {
+			sessionToken = cookie.Value
+			break
+		}
+	}
+	if sessionToken == "" {
+		utils.WriteMessageResponse(&w, http.StatusOK, http.StatusText(http.StatusOK))
+		return
 	}
 
-	expire := time.Now().Add(time.Duration(int64(ttl) * int64(time.Second)))
+	if err := session.DestroySession(sessionToken); err != nil {
+		ilog.Error(err)
+	}
+
+	setCookie(&w, sessionCookieKey, "", time.Now())
+
+	utils.WriteMessageResponse(&w, http.StatusOK, http.StatusText(http.StatusOK))
+}
+
+func setCookie(w *http.ResponseWriter, name, value string, expire time.Time) {
 	cookie := http.Cookie{
 		Name:    name,
 		Value:   value,
 		Expires: expire,
 	}
 	http.SetCookie(*w, &cookie)
-	return nil
 }

@@ -21,6 +21,20 @@ func NewSession(email string) (string, error) {
 	return token, err
 }
 
+func GetSession(token string) (*model.Session, error) {
+	session := &model.Session{
+		Token: token,
+	}
+	return model.GetSession(session)
+}
+
+func DestroySession(token string) error {
+	session := &model.Session{
+		Token: token,
+	}
+	return model.DestroySession(session)
+}
+
 func randSeq(n int) string {
 	letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 

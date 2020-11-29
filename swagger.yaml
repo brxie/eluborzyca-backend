@@ -5,15 +5,14 @@ info:
 servers:
   - url: /api/v1
 paths:
-  /session-test:
+  /session:
     get:
       security:
         - cookieAuth: []
-      operationId: TestSession
+      operationId: GetSession
       responses:
         '200':
           description: OK
-  /session:
     post:
       operationId: NewSession
       requestBody:
@@ -36,9 +35,11 @@ paths:
       responses:
         '200':
           description: OK
-        '401':
-          description: Unauthorized
-
+    delete:
+      operationId: DestroySession
+      responses:
+        '200':
+          description: OK
 components:
   securitySchemes:
     cookieAuth:

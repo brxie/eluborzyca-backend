@@ -7,6 +7,7 @@ import (
 )
 
 var Handlers = map[string]func(http.ResponseWriter, *http.Request){
-	"TestSession": handler.TestSession,
-	"NewSession":  handler.NewSession,
+	"GetSession":     handler.GetSession,
+	"NewSession":     handler.NewSession,
+	"DestroySession": handler.DestroySession,
 }

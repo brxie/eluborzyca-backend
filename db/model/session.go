@@ -10,9 +10,9 @@ import (
 
 // Session represents user session
 type Session struct {
-	Token   string    `bson:"token,omitempty"`
-	Email   string    `bson:"email,omitempty"`
-	Created time.Time `bson:"created,omitempty"`
+	Token   string    `bson:"token,omitempty"   json:"token,omitempty"`
+	Email   string    `bson:"email,omitempty"   json:"email,omitempty"`
+	Created time.Time `bson:"created,omitempty" json:"created,omitempty"`
 }
 
 const SessionsCollectionName = "sessions"
@@ -49,5 +49,20 @@ func InsertSession(session *Session) error {
 		return err
 	}
 	_, err = collection.InsertOne(ctx, doc)
+	return err
+}
+
+func DestroySession(session *Session) error {
+	var (
+		err error
+		doc *bson.M
+	)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	collection := db.DB.Collection(SessionsCollectionName)
+	if doc, err = toBSON(session); err != nil {
+		return err
+	}
+	_, err = collection.DeleteOne(ctx, doc)
 	return err
 }
