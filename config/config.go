@@ -41,7 +41,7 @@ func initCommonConfig() {
 }
 
 func initSessionTTL() {
-	viper.SetDefault("SESSION_TOKEN_TTL", "10")
+	viper.SetDefault("SESSION_TOKEN_TTL", "3600")
 	viper.BindEnv("SESSION_TOKEN_TTL")
 }
 

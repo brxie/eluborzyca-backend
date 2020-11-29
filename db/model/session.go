@@ -11,9 +11,11 @@ import (
 // Session represents user session
 type Session struct {
 	Token   string    `bson:"token,omitempty"`
-	User    string    `bson:"user,omitempty"`
+	Email   string    `bson:"email,omitempty"`
 	Created time.Time `bson:"created,omitempty"`
 }
+
+const SessionsCollectionName = "sessions"
 
 func GetSession(query *Session) (*Session, error) {
 	var (
@@ -25,12 +27,27 @@ func GetSession(query *Session) (*Session, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	colection := db.DB.Collection("sessions")
+	collection := db.DB.Collection(SessionsCollectionName)
 	if doc, err = toBSON(query); err != nil {
 		return nil, err
 	}
-	if err := colection.FindOne(ctx, doc).Decode(&session); err != nil {
+	if err := collection.FindOne(ctx, doc).Decode(&session); err != nil {
 		return nil, err
 	}
 	return &session, nil
+}
+
+func InsertSession(session *Session) error {
+	var (
+		err error
+		doc *bson.M
+	)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	collection := db.DB.Collection(SessionsCollectionName)
+	if doc, err = toBSON(session); err != nil {
+		return err
+	}
+	_, err = collection.InsertOne(ctx, doc)
+	return err
 }

@@ -8,4 +8,5 @@ import (
 
 var Handlers = map[string]func(http.ResponseWriter, *http.Request){
 	"TestSession": handler.TestSession,
+	"NewSession":  handler.NewSession,
 }
