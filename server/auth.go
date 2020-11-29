@@ -18,22 +18,24 @@ type SessionError struct {
 	RespCode int
 }
 
-func extractSession(c context.Context, input *openapi3filter.AuthenticationInput) error {
-	var sessionToken = ""
-	req := input.RequestValidationInput.Request
-	cookieKey := input.SecurityScheme.Name
+const sessionCookieKey = "SESSION_ID"
 
-	for _, cookie := range req.Cookies() {
-		if cookie.Name == cookieKey {
-			sessionToken = cookie.Value
-			break
-		}
-	}
-	if sessionToken == "" {
+func extractSession(c context.Context, input *openapi3filter.AuthenticationInput) error {
+	var (
+		cookie *http.Cookie
+		err    error
+	)
+	r := input.RequestValidationInput.Request
+
+	if cookie, err = r.Cookie(sessionCookieKey); err != nil {
 		return &SessionError{http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized}
 	}
 
-	_, err := model.GetSession(&model.Session{Token: sessionToken})
+	if cookie.Value == "" {
+		return &SessionError{http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized}
+	}
+
+	_, err = model.GetSession(&model.Session{Token: cookie.Value})
 	if err != nil {
 		return &SessionError{http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized}
 	}

@@ -10,8 +10,8 @@ import (
 
 // Session represents user session
 type Session struct {
-	Token   string    `bson:"token,omitempty"   json:"token,omitempty"`
-	Email   string    `bson:"email,omitempty"   json:"email,omitempty"`
+	Token   string    `bson:"token,omitempty" json:"token,omitempty"`
+	Email   string    `bson:"email,omitempty" json:"email,omitempty"`
 	Created time.Time `bson:"created,omitempty" json:"created,omitempty"`
 }
 

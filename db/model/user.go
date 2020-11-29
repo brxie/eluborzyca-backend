@@ -10,9 +10,13 @@ import (
 
 // User represents user user
 type User struct {
-	Email    string    `bson:"email,omitempty"`
-	Password string    `bson:"password,omitempty"`
-	Created  time.Time `bson:"created,omitempty"`
+	Email      string    `bson:"email,omitempty" json:"email,omitempty"`
+	Password   string    `bson:"password,omitempty" json:"password,omitempty"`
+	Username   string    `bson:"username,omitempty" json:"username,omitempty"`
+	Village    string    `bson:"village,omitempty" json:"village,omitempty"`
+	HomeNumber string    `bson:"homeNumber,omitempty" json:"homeNumber,omitempty"`
+	Phone      string    `bson:"phone,omitempty" json:"phone,omitempty"`
+	Created    time.Time `bson:"created,omitempty" json:"created,omitempty"`
 }
 
 const UsersCollectionName = "users"

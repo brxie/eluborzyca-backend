@@ -9,6 +9,7 @@ import (
 	"github.com/brxie/ebazarek-backend/config"
 	"github.com/brxie/ebazarek-backend/controller/session"
 	"github.com/brxie/ebazarek-backend/controller/user"
+	"github.com/brxie/ebazarek-backend/db/model"
 	"github.com/brxie/ebazarek-backend/utils"
 	"github.com/brxie/ebazarek-backend/utils/ilog"
 )
@@ -21,20 +22,7 @@ type SessionRequest struct {
 const sessionCookieKey = "SESSION_ID"
 
 func GetSession(w http.ResponseWriter, r *http.Request) {
-	var sessionToken = ""
-
-	for _, cookie := range r.Cookies() {
-		if cookie.Name == sessionCookieKey {
-			sessionToken = cookie.Value
-			break
-		}
-	}
-	if sessionToken == "" {
-		utils.WriteMessageResponse(&w, http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized))
-		return
-	}
-
-	session, err := session.GetSession(sessionToken)
+	session, err := extractSession(r)
 	if err != nil {
 		utils.WriteMessageResponse(&w, http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized))
 		return
@@ -87,33 +75,21 @@ func NewSession(w http.ResponseWriter, r *http.Request) {
 }
 
 func DestroySession(w http.ResponseWriter, r *http.Request) {
-	var sessionToken = ""
+	var (
+		s   *model.Session
+		err error
+	)
 
-	for _, cookie := range r.Cookies() {
-		if cookie.Name == sessionCookieKey {
-			sessionToken = cookie.Value
-			break
-		}
-	}
-	if sessionToken == "" {
-		utils.WriteMessageResponse(&w, http.StatusOK, http.StatusText(http.StatusOK))
+	if s, err = extractSession(r); err != nil {
+		utils.WriteMessageResponse(&w, http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized))
 		return
 	}
 
-	if err := session.DestroySession(sessionToken); err != nil {
+	if err := session.DestroySession(s.Token); err != nil {
 		ilog.Error(err)
 	}
 
 	setCookie(&w, sessionCookieKey, "", time.Now())
 
 	utils.WriteMessageResponse(&w, http.StatusOK, http.StatusText(http.StatusOK))
-}
-
-func setCookie(w *http.ResponseWriter, name, value string, expire time.Time) {
-	cookie := http.Cookie{
-		Name:    name,
-		Value:   value,
-		Expires: expire,
-	}
-	http.SetCookie(*w, &cookie)
 }

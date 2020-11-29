@@ -40,6 +40,14 @@ paths:
       responses:
         '200':
           description: OK
+  /user:
+    get:
+      security:
+        - cookieAuth: []
+      operationId: GetUser
+      responses:
+        '200':
+          description: OK
 components:
   securitySchemes:
     cookieAuth:
