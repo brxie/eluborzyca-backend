@@ -6,12 +6,14 @@ import (
 
 	"github.com/brxie/ebazarek-backend/db/model"
 	"github.com/brxie/ebazarek-backend/utils"
+	"github.com/brxie/ebazarek-backend/utils/ilog"
 )
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	session, err := extractSession(r)
 	if err != nil {
-		utils.WriteMessageResponse(&w, http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized))
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 		return
 	}
 
@@ -20,6 +22,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 	user, err := model.GetUser(&model.User{Email: session.Email})
 	if err != nil {
+		ilog.Error(err)
 		utils.WriteMessageResponse(&w, http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized))
 		return
 	}

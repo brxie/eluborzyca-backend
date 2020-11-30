@@ -1,6 +1,8 @@
 package session
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"math/rand"
 	"time"
 
@@ -18,7 +20,12 @@ func NewSession(email string) (string, error) {
 	}
 	err := model.InsertSession(session)
 
-	return token, err
+	sessionString, err := json.Marshal(session)
+	if err != nil {
+		return "", err
+	}
+
+	return base64.StdEncoding.EncodeToString(sessionString), err
 }
 
 func GetSession(token string) (*model.Session, error) {
@@ -33,6 +40,20 @@ func DestroySession(token string) error {
 		Token: token,
 	}
 	return model.DestroySession(session)
+}
+
+func DecodeSession(token string) (*model.Session, error) {
+	jsonStr, err := base64.StdEncoding.DecodeString(token)
+	if err != nil {
+		return nil, err
+	}
+
+	var session model.Session
+	if err := json.Unmarshal(jsonStr, &session); err != nil {
+		return nil, err
+	}
+	return &session, nil
+
 }
 
 func randSeq(n int) string {

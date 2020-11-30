@@ -27,5 +27,5 @@ func extractSession(r *http.Request) (*model.Session, error) {
 		return nil, err
 	}
 
-	return session.GetSession(cookie.Value)
+	return session.DecodeSession(cookie.Value)
 }

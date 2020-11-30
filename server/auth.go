@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/brxie/ebazarek-backend/controller/session"
 	"github.com/brxie/ebazarek-backend/db/model"
 	"github.com/getkin/kin-openapi/openapi3filter"
 )
@@ -31,11 +32,12 @@ func extractSession(c context.Context, input *openapi3filter.AuthenticationInput
 		return &SessionError{http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized}
 	}
 
-	if cookie.Value == "" {
+	session, err := session.DecodeSession(cookie.Value)
+	if err != nil {
 		return &SessionError{http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized}
 	}
 
-	_, err = model.GetSession(&model.Session{Token: cookie.Value})
+	_, err = model.GetSession(&model.Session{Token: session.Token, Email: session.Email})
 	if err != nil {
 		return &SessionError{http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized}
 	}

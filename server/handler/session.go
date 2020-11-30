@@ -24,7 +24,8 @@ const sessionCookieKey = "SESSION_ID"
 func GetSession(w http.ResponseWriter, r *http.Request) {
 	session, err := extractSession(r)
 	if err != nil {
-		utils.WriteMessageResponse(&w, http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized))
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 		return
 	}
 
@@ -52,7 +53,7 @@ func NewSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := session.NewSession(sessionRequest.Email)
+	sessionToken, err := session.NewSession(sessionRequest.Email)
 	if err != nil {
 		ilog.Error(err)
 		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
@@ -69,7 +70,7 @@ func NewSession(w http.ResponseWriter, r *http.Request) {
 	}
 	expire := time.Now().Add(time.Duration(int64(ttl) * int64(time.Second)))
 
-	setCookie(&w, sessionCookieKey, token, expire)
+	setCookie(&w, sessionCookieKey, sessionToken, expire)
 
 	utils.WriteMessageResponse(&w, http.StatusOK, http.StatusText(http.StatusOK))
 }
@@ -81,7 +82,8 @@ func DestroySession(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if s, err = extractSession(r); err != nil {
-		utils.WriteMessageResponse(&w, http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized))
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 		return
 	}
 
