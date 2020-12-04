@@ -13,5 +13,6 @@ var Handlers = map[string]func(http.ResponseWriter, *http.Request){
 	"DestroySession": handler.DestroySession,
 
 	// user
-	"GetUser": handler.GetUser,
+	"GetUser":    handler.GetUser,
+	"CreateUser": handler.CreateUser,
 }

@@ -48,6 +48,28 @@ paths:
       responses:
         '200':
           description: OK
+    post:
+      operationId: CreateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:                 
+                - email                
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  maxLength: 50
+                password:
+                  type: string
+                  minLength: 3
+                  maxLength: 100
+      responses:
+        '200':
+          description: OK
 components:
   securitySchemes:
     cookieAuth:

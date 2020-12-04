@@ -45,7 +45,11 @@ func NewSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var sessionRequest SessionRequest
-	json.Unmarshal(body, &sessionRequest)
+	if err := json.Unmarshal(body, &sessionRequest); err != nil {
+		utils.WriteMessageResponse(&w, http.StatusUnauthorized,
+			http.StatusText(http.StatusUnauthorized)+": "+err.Error())
+		return
+	}
 
 	if err := user.CheckPassword(sessionRequest.Email, sessionRequest.Password); err != nil {
 		utils.WriteMessageResponse(&w, http.StatusUnauthorized,

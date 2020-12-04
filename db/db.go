@@ -45,6 +45,9 @@ func Connect() error {
 }
 
 func initializeModel() error {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	// sessions collection
 	collection := DB.Collection("sessions")
 	ttl, err := config.SessionTTL()
@@ -52,16 +55,30 @@ func initializeModel() error {
 		return err
 	}
 	tokenTTL := int32(ttl)
-	mod := mongo.IndexModel{
+	model := mongo.IndexModel{
 		Keys: bson.M{
 			"created": 1, // index in ascending order
 		}, Options: &options.IndexOptions{ExpireAfterSeconds: &tokenTTL},
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	_, err = collection.Indexes().CreateOne(ctx, mod)
+	_, err = collection.Indexes().CreateOne(ctx, model)
+	if err != nil {
+		return err
+	}
 
-	return err
+	// users collection
+	collection = DB.Collection("users")
+	uniqie := true
+	model = mongo.IndexModel{
+		Keys: bson.M{
+			"email": 1, // index in ascending order
+		}, Options: &options.IndexOptions{Unique: &uniqie},
+	}
+	_, err = collection.Indexes().CreateOne(ctx, model)
+	if err != nil {
+		return err
+	}
+
+	return nil
 
 }
 

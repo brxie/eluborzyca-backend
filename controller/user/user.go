@@ -22,7 +22,7 @@ func CheckPassword(email, password string) error {
 	return nil
 }
 
-func encode(password string) (string, error) {
+func Encode(password string) (string, error) {
 	cipher, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err
