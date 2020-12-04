@@ -41,7 +41,7 @@ func init() {
 	logger = getLogger()
 	logger.SetFormatter(formatter)
 
-	levelStr := strings.ToUpper(config.LoggerConfig()["LOG_LEVEL"])
+	levelStr := strings.ToUpper(config.Viper.GetString("LOG_LEVEL"))
 	if v, ok := verb[levelStr]; ok {
 		logger.SetLevel(v)
 	}

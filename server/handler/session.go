@@ -65,14 +65,8 @@ func NewSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ttl, err := config.SessionTTL()
-	if err != nil {
-		ilog.Error(err)
-		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
-			http.StatusText(http.StatusInternalServerError)+" "+err.Error())
-		return
-	}
-	expire := time.Now().Add(time.Duration(int64(ttl) * int64(time.Second)))
+	ttl := config.Viper.GetInt64("SESSION_TTL")
+	expire := time.Now().Add(time.Duration(ttl * int64(time.Second)))
 
 	setCookie(&w, sessionCookieKey, sessionToken, expire)
 

@@ -15,8 +15,12 @@ import (
 )
 
 type NewUserRequest struct {
-	Email    string
-	Password string
+	Email      string
+	Password   string
+	Username   string
+	Village    string
+	HomeNumber string
+	Phone      string
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
@@ -66,9 +70,13 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = model.InsertUser(&model.User{
-		Email:    newUserRequest.Email,
-		Password: passwdCipher,
-		Created:  time.Now(),
+		Email:      newUserRequest.Email,
+		Password:   passwdCipher,
+		Username:   newUserRequest.Username,
+		Village:    newUserRequest.Village,
+		HomeNumber: newUserRequest.HomeNumber,
+		Phone:      newUserRequest.Phone,
+		Created:    time.Now(),
 	})
 
 	if err != nil {

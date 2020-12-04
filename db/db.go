@@ -18,12 +18,11 @@ import (
 var DB *mongo.Database
 
 func Connect() error {
-	config := config.DBconfig()
-	dbAddr := config["DB_ADDR"]
-	dbPort := config["DB_PORT"]
-	dbName := config["DB_NAME"]
+	dbAddr := config.Viper.GetString("DB_ADDR")
+	dbPort := config.Viper.GetInt("DB_PORT")
+	dbName := config.Viper.GetString("DB_NAME")
 
-	uri := fmt.Sprintf("mongodb://%s:%s", dbAddr, dbPort)
+	uri := fmt.Sprintf("mongodb://%s:%d", dbAddr, dbPort)
 	ilog.Debug("Connecting database uri: " + uri)
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
@@ -50,17 +49,14 @@ func initializeModel() error {
 
 	// sessions collection
 	collection := DB.Collection("sessions")
-	ttl, err := config.SessionTTL()
-	if err != nil {
-		return err
-	}
-	tokenTTL := int32(ttl)
+
+	tokenTTL := config.Viper.GetInt32("SESSION_TOKEN_TTL")
 	model := mongo.IndexModel{
 		Keys: bson.M{
 			"created": 1, // index in ascending order
 		}, Options: &options.IndexOptions{ExpireAfterSeconds: &tokenTTL},
 	}
-	_, err = collection.Indexes().CreateOne(ctx, model)
+	_, err := collection.Indexes().CreateOne(ctx, model)
 	if err != nil {
 		return err
 	}
