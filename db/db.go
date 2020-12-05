@@ -74,6 +74,45 @@ func initializeModel() error {
 		return err
 	}
 
+	// units collection
+	collection = DB.Collection("units")
+	uniqie = true
+	model = mongo.IndexModel{
+		Keys: bson.M{
+			"name": 1, // index in ascending order
+		}, Options: &options.IndexOptions{Unique: &uniqie},
+	}
+	_, err = collection.Indexes().CreateOne(ctx, model)
+	if err != nil {
+		return err
+	}
+
+	// villages collection
+	collection = DB.Collection("villages")
+	uniqie = true
+	model = mongo.IndexModel{
+		Keys: bson.M{
+			"name": 1, // index in ascending order
+		}, Options: &options.IndexOptions{Unique: &uniqie},
+	}
+	_, err = collection.Indexes().CreateOne(ctx, model)
+	if err != nil {
+		return err
+	}
+
+	// categories collection
+	collection = DB.Collection("categories")
+	uniqie = true
+	model = mongo.IndexModel{
+		Keys: bson.M{
+			"name": 1, // index in ascending order
+		}, Options: &options.IndexOptions{Unique: &uniqie},
+	}
+	_, err = collection.Indexes().CreateOne(ctx, model)
+	if err != nil {
+		return err
+	}
+
 	return nil
 
 }

@@ -16,4 +16,22 @@ var Handlers = map[string]func(http.ResponseWriter, *http.Request){
 	"GetUser":    handler.GetUser,
 	"CreateUser": handler.CreateUser,
 	"UpdateUser": handler.UpdateUser,
+
+	// item
+	"CreateItem": handler.CreateItem,
+
+	// items
+	"GetItems": handler.GetItems,
+
+	// images
+	"GetImages": handler.GetImages,
+
+	// units
+	"GetUnits": handler.GetUnits,
+
+	// categories
+	"GetCategories": handler.GetCategories,
+
+	// villages
+	"GetVillages": handler.GetVillages,
 }

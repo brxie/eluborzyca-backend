@@ -62,6 +62,12 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if _, err := model.GetVillage(&model.Village{Name: userRequest.Village}); err != nil {
+		ilog.Warn(err)
+		utils.WriteMessageResponse(&w, http.StatusBadRequest, "Village doesn't exists")
+		return
+	}
+
 	passwdCipher, err := user.Encode(userRequest.NewPassword)
 	if err != nil {
 		ilog.Error(err)

@@ -9,19 +9,15 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-type ID struct {
-	ID primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
-}
-
-// User represents user user
 type User struct {
-	Email      string    `bson:"email,omitempty" json:"email,omitempty"`
-	Password   string    `bson:"password,omitempty" json:"password,omitempty"`
-	Username   string    `bson:"username,omitempty" json:"username,omitempty"`
-	Village    string    `bson:"village,omitempty" json:"village,omitempty"`
-	HomeNumber string    `bson:"homeNumber,omitempty" json:"homeNumber,omitempty"`
-	Phone      string    `bson:"phone,omitempty" json:"phone,omitempty"`
-	Created    time.Time `bson:"created,omitempty" json:"created,omitempty"`
+	ID         primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	Email      string             `bson:"email,omitempty" json:"email,omitempty"`
+	Password   string             `bson:"password,omitempty" json:"password,omitempty"`
+	Username   string             `bson:"username,omitempty" json:"username,omitempty"`
+	Village    string             `bson:"village,omitempty" json:"village,omitempty"`
+	HomeNumber string             `bson:"homeNumber,omitempty" json:"homeNumber,omitempty"`
+	Phone      string             `bson:"phone,omitempty" json:"phone,omitempty"`
+	Created    time.Time          `bson:"created,omitempty" json:"created,omitempty"`
 }
 
 const UsersCollectionName = "users"

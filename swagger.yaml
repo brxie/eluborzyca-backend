@@ -71,6 +71,8 @@ paths:
         '200':
           description: OK
     put:
+      security:
+        - cookieAuth: []
       operationId: UpdateUser
       requestBody:
         content:
@@ -98,6 +100,85 @@ paths:
       responses:
         '200':
           description: OK
+  /item:
+    post:
+      security:
+        - cookieAuth: []
+      operationId: CreateItem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:                 
+                - name
+                - price
+                - unit
+                - availability
+                - firstLastName
+                - village
+                - homeNumber
+                - phone
+                - category
+                - description
+              properties:
+                name:
+                  type: string
+                  maxLength: 100
+                price:
+                  type: integer
+                  minimum: 0
+                  maximum: 1000000000
+                unit:
+                  type: string
+                availability:
+                  type: integer
+                firstLastName:
+                  type: string
+                village:
+                  type: string
+                homeNumber:
+                  type: string
+                phone:
+                  type: string
+                category:
+                  type: string
+                description:
+                  type: string
+                  maxLength: 30000
+                images:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: OK
+  /images:
+    get:
+      operationId: GetImages
+      responses:
+        '200':
+          description: OK
+  /units:
+    get:
+      operationId: GetUnits
+      responses:
+        '200':
+          description: OK
+  /categoris:
+    get:
+      operationId: GetCategories
+      responses:
+        '200':
+          description: OK
+  /villages:
+    get:
+      operationId: GetVillages
+      responses:
+        '200':
+          description: OK
+
+
 components:
   securitySchemes:
     cookieAuth:
