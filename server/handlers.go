@@ -15,4 +15,5 @@ var Handlers = map[string]func(http.ResponseWriter, *http.Request){
 	// user
 	"GetUser":    handler.GetUser,
 	"CreateUser": handler.CreateUser,
+	"UpdateUser": handler.UpdateUser,
 }

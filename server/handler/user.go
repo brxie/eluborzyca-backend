@@ -14,13 +14,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type NewUserRequest struct {
-	Email      string
-	Password   string
-	Username   string
-	Village    string
-	HomeNumber string
-	Phone      string
+type UserRequest struct {
+	Email       string
+	NewPassword string
+	Password    string
+	Username    string
+	Village     string
+	HomeNumber  string
+	Phone       string
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
@@ -50,19 +51,18 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		ilog.Error(err)
 		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
-			http.StatusText(http.StatusInternalServerError)+err.Error())
+			http.StatusText(http.StatusInternalServerError)+": "+err.Error())
 		return
 	}
 
-	var newUserRequest NewUserRequest
-	if err := json.Unmarshal(body, &newUserRequest); err != nil {
+	var userRequest UserRequest
+	if err := json.Unmarshal(body, &userRequest); err != nil {
 		ilog.Error(err)
 		utils.WriteMessageResponse(&w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 		return
 	}
 
-	// var passwdCipher string
-	passwdCipher, err := user.Encode(newUserRequest.Password)
+	passwdCipher, err := user.Encode(userRequest.NewPassword)
 	if err != nil {
 		ilog.Error(err)
 		utils.WriteMessageResponse(&w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
@@ -70,12 +70,12 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = model.InsertUser(&model.User{
-		Email:      newUserRequest.Email,
+		Email:      userRequest.Email,
 		Password:   passwdCipher,
-		Username:   newUserRequest.Username,
-		Village:    newUserRequest.Village,
-		HomeNumber: newUserRequest.HomeNumber,
-		Phone:      newUserRequest.Phone,
+		Username:   userRequest.Username,
+		Village:    userRequest.Village,
+		HomeNumber: userRequest.HomeNumber,
+		Phone:      userRequest.Phone,
 		Created:    time.Now(),
 	})
 
@@ -83,7 +83,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		if e, ok := err.(mongo.WriteException); ok {
 			if e.WriteErrors[0].Code == 11000 {
 				utils.WriteMessageResponse(&w, http.StatusConflict,
-					fmt.Sprintf("Email '%s' already used", newUserRequest.Email))
+					fmt.Sprintf("Email '%s' already used", userRequest.Email))
 				return
 			}
 		}
@@ -93,4 +93,68 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	utils.WriteMessageResponse(&w, http.StatusCreated, http.StatusText(http.StatusCreated))
+}
+
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	session, err := extractSession(r)
+	if err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+		return
+	}
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+			http.StatusText(http.StatusInternalServerError)+": "+err.Error())
+		return
+	}
+
+	var userRequest UserRequest
+	if err := json.Unmarshal(body, &userRequest); err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+			http.StatusText(http.StatusInternalServerError))
+		return
+	}
+
+	if userRequest.NewPassword == userRequest.Password {
+		utils.WriteMessageResponse(&w, http.StatusBadRequest,
+			"New password must differ")
+		return
+	}
+
+	if userRequest.NewPassword != "" {
+		if err := user.CheckPassword(userRequest.Email, userRequest.Password); err != nil {
+			utils.WriteMessageResponse(&w, http.StatusBadRequest,
+				"Old password is incorrect")
+			return
+		}
+
+		if userRequest.NewPassword, err = user.Encode(userRequest.NewPassword); err != nil {
+			ilog.Error(err)
+			utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+				http.StatusText(http.StatusInternalServerError))
+			return
+		}
+
+	}
+
+	update := &model.User{
+		Username:   userRequest.Username,
+		Village:    userRequest.Village,
+		HomeNumber: userRequest.HomeNumber,
+		Phone:      userRequest.Phone,
+		Password:   userRequest.NewPassword,
+	}
+
+	if err := model.UpdateUser(&model.User{Email: session.Email}, update); err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+			http.StatusText(http.StatusInternalServerError)+": "+err.Error())
+		return
+	}
+
+	utils.WriteMessageResponse(&w, http.StatusOK, http.StatusText(http.StatusOK))
 }

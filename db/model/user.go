@@ -6,7 +6,12 @@ import (
 
 	"github.com/brxie/ebazarek-backend/db"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
+
+type ID struct {
+	ID primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
+}
 
 // User represents user user
 type User struct {
@@ -53,5 +58,29 @@ func InsertUser(user *User) error {
 		return err
 	}
 	_, err = collection.InsertOne(ctx, doc)
+	return err
+}
+
+func UpdateUser(filter, update *User) error {
+	var (
+		err                  error
+		filterDoc, updateDoc *bson.M
+	)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	collection := db.DB.Collection(UsersCollectionName)
+
+	if filterDoc, err = toBSON(filter); err != nil {
+		return err
+	}
+
+	if updateDoc, err = toBSON(update); err != nil {
+		return err
+	}
+
+	_, err = collection.UpdateOne(ctx, filterDoc, bson.M{
+		"$set": updateDoc,
+	})
 	return err
 }
