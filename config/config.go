@@ -32,6 +32,8 @@ func initDBconfig() {
 }
 
 func initCommonConfig() {
+	Viper.BindEnv("CORS_ALLOWED_ORIGIN")
+	Viper.SetDefault("CORS_ALLOWED_ORIGIN", "*")
 	Viper.SetDefault("BIND_ADDRESS", ":4000")
 	Viper.BindEnv("BIND_ADDRESS")
 

@@ -10,8 +10,9 @@ import (
 )
 
 type Category struct {
-	ID   primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	ID   primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
 	Name string             `bson:"name,omitempty" json:"name,omitempty"`
+	Icon string             `bson:"icon,omitempty" json:"icon,omitempty"`
 }
 
 const CategoriesCollectionName = "categories"

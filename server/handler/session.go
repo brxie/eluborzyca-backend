@@ -69,7 +69,6 @@ func NewSession(w http.ResponseWriter, r *http.Request) {
 	expire := time.Now().Add(time.Duration(ttl * int64(time.Second)))
 
 	setCookie(&w, sessionCookieKey, sessionToken, expire)
-
 	utils.WriteMessageResponse(&w, http.StatusOK, http.StatusText(http.StatusOK))
 }
 
@@ -80,8 +79,7 @@ func DestroySession(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if s, err = extractSession(r); err != nil {
-		ilog.Error(err)
-		utils.WriteMessageResponse(&w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+		utils.WriteMessageResponse(&w, http.StatusOK, http.StatusText(http.StatusOK))
 		return
 	}
 
@@ -90,6 +88,5 @@ func DestroySession(w http.ResponseWriter, r *http.Request) {
 	}
 
 	setCookie(&w, sessionCookieKey, "", time.Now())
-
 	utils.WriteMessageResponse(&w, http.StatusOK, http.StatusText(http.StatusOK))
 }

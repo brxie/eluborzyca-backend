@@ -12,7 +12,7 @@ func setCookie(w *http.ResponseWriter, name, value string, expire time.Time) {
 	cookie := http.Cookie{
 		Name:    name,
 		Value:   value,
-		Expires: expire,
+		Expires: expire, // SOME BUG HERE!
 	}
 	http.SetCookie(*w, &cookie)
 }

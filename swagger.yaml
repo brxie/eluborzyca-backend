@@ -100,6 +100,12 @@ paths:
       responses:
         '200':
           description: OK
+  /items:
+    get:
+      operationId: GetItems
+      responses:
+        '200':
+          description: OK
   /item:
     post:
       security:
@@ -165,7 +171,7 @@ paths:
       responses:
         '200':
           description: OK
-  /categoris:
+  /categories:
     get:
       operationId: GetCategories
       responses:

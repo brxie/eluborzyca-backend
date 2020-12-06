@@ -10,7 +10,7 @@ import (
 )
 
 type Image struct {
-	ID              primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	ID              primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
 	Src             string             `bson:"src,omitempty" json:"src,omitempty"`
 	Thumbnail       string             `bson:"thumbnail,omitempty" json:"thumbnail,omitempty"`
 	ThumbnailWidth  int                `bson:"thumbnailWidth,omitempty" json:"thumbnailWidth,omitempty"`
