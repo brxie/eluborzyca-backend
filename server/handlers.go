@@ -19,6 +19,7 @@ var Handlers = map[string]func(http.ResponseWriter, *http.Request){
 
 	// item
 	"CreateItem": handler.CreateItem,
+	"GetItem":    handler.GetItem,
 
 	// items
 	"GetItems": handler.GetItems,

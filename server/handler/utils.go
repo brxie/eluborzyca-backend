@@ -1,9 +1,11 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
+	"github.com/brxie/ebazarek-backend/config"
 	"github.com/brxie/ebazarek-backend/controller/session"
 	"github.com/brxie/ebazarek-backend/db/model"
 )
@@ -12,7 +14,7 @@ func setCookie(w *http.ResponseWriter, name, value string, expire time.Time) {
 	cookie := http.Cookie{
 		Name:    name,
 		Value:   value,
-		Expires: expire, // SOME BUG HERE!
+		Expires: expire,
 	}
 	http.SetCookie(*w, &cookie)
 }
@@ -28,4 +30,12 @@ func extractSession(r *http.Request) (*model.Session, error) {
 	}
 
 	return session.DecodeSession(cookie.Value)
+}
+
+func GetUrlParamValue(r *http.Request, paramKey string) (string, error) {
+	params := r.Context().Value(config.PARAMS).(map[string]string)
+	if param, ok := params[paramKey]; ok {
+		return param, nil
+	}
+	return "", fmt.Errorf("Parameter '%s' doesn't exist. ", paramKey)
 }

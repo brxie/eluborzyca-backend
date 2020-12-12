@@ -28,6 +28,34 @@ type ItemRequest struct {
 	Images        []string
 }
 
+func GetItem(w http.ResponseWriter, r *http.Request) {
+	itemID, err := GetUrlParamValue(r, "itemID")
+	if err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+			http.StatusText(http.StatusInternalServerError))
+		return
+	}
+
+	id, err := primitive.ObjectIDFromHex(itemID)
+	if err != nil {
+		utils.WriteMessageResponse(&w, http.StatusNotFound,
+			http.StatusText(http.StatusNotFound))
+		return
+	}
+	item, err := model.GetItem(&model.Item{ID: id})
+	if err != nil {
+		utils.WriteMessageResponse(&w, http.StatusNotFound,
+			http.StatusText(http.StatusNotFound))
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	json.NewEncoder(w).Encode(item)
+}
+
 func CreateItem(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {

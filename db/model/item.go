@@ -30,6 +30,26 @@ type Item struct {
 
 const ItemsCollectionName = "items"
 
+func GetItem(query *Item) (*Item, error) {
+	var (
+		err  error
+		item Item
+		doc  *bson.M
+	)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	collection := db.DB.Collection(ItemsCollectionName)
+	if doc, err = toBSON(query); err != nil {
+		return nil, err
+	}
+	if err := collection.FindOne(ctx, doc).Decode(&item); err != nil {
+		return nil, err
+	}
+	return &item, nil
+}
+
 func InsertItem(item *Item) error {
 	var (
 		err error

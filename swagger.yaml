@@ -106,6 +106,18 @@ paths:
       responses:
         '200':
           description: OK
+  /item/{itemID}:
+    get:
+      operationId: GetItem
+      parameters:
+        - in: path
+          name: itemID
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
   /item:
     post:
       security:
