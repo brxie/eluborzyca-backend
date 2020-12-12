@@ -15,7 +15,6 @@ type Image struct {
 	Thumbnail       string             `bson:"thumbnail,omitempty" json:"thumbnail,omitempty"`
 	ThumbnailWidth  int                `bson:"thumbnailWidth,omitempty" json:"thumbnailWidth,omitempty"`
 	ThumbnailHeight int                `bson:"thumbnailHeight,omitempty" json:"thumbnailHeight,omitempty"`
-	Created         time.Time          `bson:"created,omitempty" json:"created,omitempty"`
 }
 
 const ImagesCollectionName = "images"
