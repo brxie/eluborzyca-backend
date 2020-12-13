@@ -22,6 +22,7 @@ var Handlers = map[string]func(http.ResponseWriter, *http.Request){
 	"CreateItem":   handler.CreateItem,
 	"ActivateItem": handler.ActivateItem,
 	"UpdateItem":   handler.UpdateItem,
+	"DeleteItem":   handler.DeleteItem,
 
 	// items
 	"GetItems": handler.GetItems,

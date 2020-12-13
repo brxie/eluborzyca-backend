@@ -1,12 +1,28 @@
 package handler
 
 import (
+	"encoding/json"
 	"net/http"
 
+	"github.com/brxie/ebazarek-backend/db/model"
 	"github.com/brxie/ebazarek-backend/utils"
+	"github.com/brxie/ebazarek-backend/utils/ilog"
 )
 
 func GetUnits(w http.ResponseWriter, r *http.Request) {
+	units, err := model.GetUnits(&model.Unit{})
+	if err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+			http.StatusText(http.StatusInternalServerError))
+	}
 
-	utils.WriteMessageResponse(&w, http.StatusOK, http.StatusText(http.StatusOK))
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	resp := []string{}
+	for _, unit := range units {
+		resp = append(resp, unit.Name)
+	}
+	json.NewEncoder(w).Encode(resp)
 }

@@ -309,3 +309,45 @@ func CreateItem(w http.ResponseWriter, r *http.Request) {
 
 	utils.WriteMessageResponse(&w, http.StatusCreated, http.StatusText(http.StatusCreated))
 }
+
+func DeleteItem(w http.ResponseWriter, r *http.Request) {
+	session, err := extractSession(r)
+	if err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+		return
+	}
+
+	itemID, err := GetUrlParamValue(r, "itemID")
+	if err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+			http.StatusText(http.StatusInternalServerError))
+		return
+	}
+
+	id, err := primitive.ObjectIDFromHex(itemID)
+	if err != nil {
+		utils.WriteMessageResponse(&w, http.StatusNotFound,
+			http.StatusText(http.StatusNotFound))
+		return
+	}
+
+	item, err := model.GetItem(&model.Item{ID: id})
+	if err != nil {
+		utils.WriteMessageResponse(&w, http.StatusNotFound,
+			http.StatusText(http.StatusNotFound))
+		return
+	}
+
+	if item.Owner != session.Email {
+		utils.WriteMessageResponse(&w, http.StatusForbidden, http.StatusText(http.StatusForbidden))
+		return
+	}
+
+	if err := model.DeleteItem(&model.Item{ID: id}); err != nil {
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+			http.StatusText(http.StatusInternalServerError))
+	}
+	utils.WriteMessageResponse(&w, http.StatusOK, http.StatusText(http.StatusOK))
+}

@@ -125,12 +125,6 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if userRequest.NewPassword == userRequest.Password {
-		utils.WriteMessageResponse(&w, http.StatusBadRequest,
-			"New password must differ")
-		return
-	}
-
 	if userRequest.NewPassword != "" {
 		if err := user.CheckPassword(userRequest.Email, userRequest.Password); err != nil {
 			utils.WriteMessageResponse(&w, http.StatusBadRequest,
@@ -144,7 +138,6 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 				http.StatusText(http.StatusInternalServerError))
 			return
 		}
-
 	}
 
 	update := &model.User{

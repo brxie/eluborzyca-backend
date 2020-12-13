@@ -118,6 +118,19 @@ paths:
       responses:
         '200':
           description: OK
+    delete:
+      security:
+        - cookieAuth: []
+      operationId: DeleteItem
+      parameters:
+        - in: path
+          name: itemID
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
     put:
       security:
         - cookieAuth: []

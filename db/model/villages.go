@@ -8,17 +8,17 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func GetCategories(query *Category) ([]Category, error) {
+func GetVillages(query *Village) ([]Village, error) {
 	var (
-		err        error
-		categories []Category
-		doc        *bson.M
+		err      error
+		villages []Village
+		doc      *bson.M
 	)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	collection := db.DB.Collection(CategoriesCollectionName)
+	collection := db.DB.Collection(VillagesCollectionName)
 	if doc, err = toBSON(query); err != nil {
 		return nil, err
 	}
@@ -29,12 +29,12 @@ func GetCategories(query *Category) ([]Category, error) {
 	}
 
 	for cursor.Next(context.TODO()) {
-		var category Category
-		if err := cursor.Decode(&category); err != nil {
+		var village Village
+		if err := cursor.Decode(&village); err != nil {
 			return nil, err
 		}
-		categories = append(categories, category)
+		villages = append(villages, village)
 	}
 
-	return categories, nil
+	return villages, nil
 }

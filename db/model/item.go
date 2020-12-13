@@ -26,6 +26,7 @@ type Item struct {
 	Active        bool               `bson:"active,omitempty" json:"active,omitempty"`
 	Images        []Image            `bson:"images,omitempty" json:"images,omitempty"`
 	Created       time.Time          `bson:"created,omitempty" json:"created,omitempty"`
+	Deleted       time.Time          `bson:"deleted,omitempty" json:"deleted,omitempty"`
 }
 
 type ItemUpdate struct {
@@ -48,6 +49,7 @@ type ItemActivate struct {
 }
 
 const ItemsCollectionName = "items"
+const DeletedItemsCollectionName = "items_deleted"
 
 func GetItem(query *Item) (*Item, error) {
 	var (
@@ -130,4 +132,36 @@ func ActivateItem(filter *Item, update *ItemActivate) error {
 		"$set": updateDoc,
 	})
 	return err
+}
+
+func DeleteItem(query *Item) error {
+
+	var (
+		err  error
+		item Item
+		doc  *bson.M
+	)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	collection := db.DB.Collection(ItemsCollectionName)
+	collectionDeleted := db.DB.Collection(DeletedItemsCollectionName)
+	if doc, err = toBSON(query); err != nil {
+		return err
+	}
+	if err := collection.FindOne(ctx, doc).Decode(&item); err != nil {
+		return err
+	}
+
+	item.Deleted = time.Now()
+	if _, err = collectionDeleted.InsertOne(ctx, item); err != nil {
+		return err
+	}
+
+	if _, err := collection.DeleteOne(ctx, &doc); err != nil {
+		return err
+	}
+
+	return nil
 }
