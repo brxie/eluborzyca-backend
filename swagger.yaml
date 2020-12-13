@@ -118,6 +118,74 @@ paths:
       responses:
         '200':
           description: OK
+    put:
+      security:
+        - cookieAuth: []
+      operationId: UpdateItem
+      parameters:
+        - in: path
+          name: itemID
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  maxLength: 100
+                price:
+                  type: integer
+                  minimum: 0
+                  maximum: 1000000000
+                unit:
+                  type: string
+                availability:
+                  type: integer
+                  minimum: 1
+                  maximum: 4
+                firstLastName:
+                  type: string
+                village:
+                  type: string
+                homeNumber:
+                  type: string
+                phone:
+                  type: string
+                category:
+                  type: string
+                description:
+                  type: string
+                  maxLength: 30000
+      responses:
+        '200':
+          description: OK
+    patch:
+      security:
+        - cookieAuth: []
+      operationId: ActivateItem
+      parameters:
+        - in: path
+          name: itemID
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:                 
+                - active                
+              properties:
+                active:
+                  type: boolean
+      responses:
+        '200':
+          description: OK
   /item:
     post:
       security:
@@ -151,6 +219,8 @@ paths:
                   type: string
                 availability:
                   type: integer
+                  minimum: 1
+                  maximum: 4
                 firstLastName:
                   type: string
                 village:

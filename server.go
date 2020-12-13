@@ -23,7 +23,7 @@ func main() {
 		AllowOriginFunc:  func(origin string) bool { return true },
 		AllowedOrigins:   []string{config.Viper.GetString("CORS_ALLOWED_ORIGIN")},
 		AllowCredentials: true,
-		AllowedMethods:   []string{"GET", "PUT", "POST", "DELETE", "HEAD"},
+		AllowedMethods:   []string{"GET", "PUT", "POST", "DELETE", "HEAD", "PATCH"},
 	})
 
 	handler := corsHandler.Handler(httpHandler)

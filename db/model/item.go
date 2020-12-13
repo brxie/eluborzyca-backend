@@ -28,6 +28,25 @@ type Item struct {
 	Created       time.Time          `bson:"created,omitempty" json:"created,omitempty"`
 }
 
+type ItemUpdate struct {
+	ID            primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
+	Name          string             `bson:"name,omitempty" json:"name,omitempty"`
+	Price         uint64             `bson:"price,omitempty" json:"price,omitempty"`
+	Unit          string             `bson:"unit,omitempty" json:"unit,omitempty"`
+	Availability  int                `bson:"availability,omitempty" json:"availability,omitempty"`
+	FirstLastName string             `bson:"firstLastName,omitempty" json:"firstLastName,omitempty"`
+	Village       string             `bson:"village,omitempty" json:"village,omitempty"`
+	HomeNumber    string             `bson:"homeNumber,omitempty" json:"homeNumber,omitempty"`
+	Phone         string             `bson:"phone,omitempty" json:"phone,omitempty"`
+	Category      string             `bson:"category,omitempty" json:"category,omitempty"`
+	Description   string             `bson:"description,omitempty" json:"description,omitempty"`
+}
+
+type ItemActivate struct {
+	ID     primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
+	Active bool
+}
+
 const ItemsCollectionName = "items"
 
 func GetItem(query *Item) (*Item, error) {
@@ -62,5 +81,53 @@ func InsertItem(item *Item) error {
 		return err
 	}
 	_, err = collection.InsertOne(ctx, doc)
+	return err
+}
+
+func UpdateItem(filter *Item, update *ItemUpdate) error {
+	var (
+		err                  error
+		filterDoc, updateDoc *bson.M
+	)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	collection := db.DB.Collection(ItemsCollectionName)
+
+	if filterDoc, err = toBSON(filter); err != nil {
+		return err
+	}
+
+	if updateDoc, err = toBSON(update); err != nil {
+		return err
+	}
+
+	_, err = collection.UpdateOne(ctx, filterDoc, bson.M{
+		"$set": updateDoc,
+	})
+	return err
+}
+
+func ActivateItem(filter *Item, update *ItemActivate) error {
+	var (
+		err                  error
+		filterDoc, updateDoc *bson.M
+	)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	collection := db.DB.Collection(ItemsCollectionName)
+
+	if filterDoc, err = toBSON(filter); err != nil {
+		return err
+	}
+
+	if updateDoc, err = toBSON(update); err != nil {
+		return err
+	}
+
+	_, err = collection.UpdateOne(ctx, filterDoc, bson.M{
+		"$set": updateDoc,
+	})
 	return err
 }
