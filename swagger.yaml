@@ -250,13 +250,45 @@ paths:
                 images:
                   type: array
                   items:
-                    type: string
+                    type: object
+                    properties:
+                      src:
+                        type: string
+                      thumbnail:
+                        type: string
+                      thumbnailWidth:
+                        type: integer
+                      thumbnailHeight:
+                        type: integer
       responses:
         '200':
           description: OK
-  /images:
+  /image/{imageID}:
     get:
-      operationId: GetImages
+      operationId: GetImage
+      parameters:
+        - in: path
+          name: imageID
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+  /image:
+    post:
+      security:
+        - cookieAuth: []
+      operationId: UploadImage
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
       responses:
         '200':
           description: OK

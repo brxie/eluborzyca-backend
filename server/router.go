@@ -24,6 +24,9 @@ func SwaggerRouter(swaggerFile string) http.Handler {
 
 	oa3router := openapi3filter.NewRouter().WithSwagger(swagger)
 
+	openapi3filter.RegisterBodyDecoder("image/jpeg", openapi3filter.FileBodyDecoder)
+	openapi3filter.RegisterBodyDecoder("image/png", openapi3filter.FileBodyDecoder)
+
 	httpHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Find route
 		route, pathParams, _ := oa3router.FindRoute(r.Method, r.URL)

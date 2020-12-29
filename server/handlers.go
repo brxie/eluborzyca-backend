@@ -27,8 +27,9 @@ var Handlers = map[string]func(http.ResponseWriter, *http.Request){
 	// items
 	"GetItems": handler.GetItems,
 
-	// images
-	"GetImages": handler.GetImages,
+	// image
+	"GetImage":    handler.GetImage,
+	"UploadImage": handler.UploadImage,
 
 	// units
 	"GetUnits": handler.GetUnits,

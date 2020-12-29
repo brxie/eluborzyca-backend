@@ -68,7 +68,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	passwdCipher, err := user.Encode(userRequest.NewPassword)
+	passwdCipher, err := user.Encode(userRequest.Password)
 	if err != nil {
 		ilog.Error(err)
 		utils.WriteMessageResponse(&w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
