@@ -5,6 +5,8 @@ import (
 	"crypto/tls"
 	"fmt"
 	"html/template"
+	"os"
+	"path"
 
 	"github.com/brxie/eluborzyca-backend/config"
 	"github.com/brxie/eluborzyca-backend/db/model"
@@ -67,7 +69,12 @@ func SendVeryfyTokenEmail(token *model.VerifyToken) error {
 	m.SetHeader("To", token.Email)
 	m.SetHeader("Subject", "Verify Token")
 
-	t, err := template.ParseFiles("verifyTokenEmail.html")
+	ex, err := os.Executable()
+	if err != nil {
+		return err
+	}
+
+	t, err := template.ParseFiles(path.Join(ex, "verifyTokenEmail.html"))
 	if err != nil {
 		return err
 	}

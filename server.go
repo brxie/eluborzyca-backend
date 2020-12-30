@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"os"
+	"path"
 
 	"github.com/brxie/eluborzyca-backend/config"
 	_ "github.com/brxie/eluborzyca-backend/db"
@@ -14,7 +16,12 @@ import (
 )
 
 func main() {
-	httpHandler := server.SwaggerRouter("swagger.yaml")
+	ex, err := os.Executable()
+	if err != nil {
+		ilog.Panic(err)
+	}
+
+	httpHandler := server.SwaggerRouter(path.Join(path.Dir(ex), "swagger.yaml"))
 	bindAddress := config.Viper.GetString("BIND_ADDRESS")
 	ilog.Info(fmt.Sprintf("Starting server at address '%s'", bindAddress))
 	httpAddr := flag.String("http.addr", bindAddress, "HTTP listen address")
@@ -27,6 +34,6 @@ func main() {
 	})
 
 	handler := corsHandler.Handler(httpHandler)
-	err := http.ListenAndServe(*httpAddr, handler)
+	err = http.ListenAndServe(*httpAddr, handler)
 	ilog.Panic(err)
 }
