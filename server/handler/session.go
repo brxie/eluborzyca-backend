@@ -53,7 +53,20 @@ func NewSession(w http.ResponseWriter, r *http.Request) {
 
 	if err := user.CheckPassword(sessionRequest.Email, sessionRequest.Password); err != nil {
 		utils.WriteMessageResponse(&w, http.StatusUnauthorized,
-			http.StatusText(http.StatusUnauthorized)+": "+err.Error())
+			http.StatusText(http.StatusUnauthorized))
+		return
+	}
+
+	verified, err := user.IsVerified(sessionRequest.Email)
+	if err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+			http.StatusText(http.StatusInternalServerError)+err.Error())
+		return
+	}
+
+	if !verified {
+		utils.WriteMessageResponse(&w, http.StatusForbidden, "User not verified")
 		return
 	}
 

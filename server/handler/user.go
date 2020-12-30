@@ -11,6 +11,7 @@ import (
 	"github.com/brxie/ebazarek-backend/db/model"
 	"github.com/brxie/ebazarek-backend/utils"
 	"github.com/brxie/ebazarek-backend/utils/ilog"
+	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -35,7 +36,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	user, err := model.GetUser(&model.User{Email: session.Email})
 	if err != nil {
 		ilog.Error(err)
-		utils.WriteMessageResponse(&w, http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized))
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 		return
 	}
 
@@ -98,6 +99,25 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		utils.WriteMessageResponse(&w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 		return
 	}
+
+	verifyToken := &model.VerifyToken{
+		Email:   userRequest.Email,
+		Token:   uuid.New().String(),
+		Created: time.Now(),
+	}
+
+	if err := model.InsertVerifyToken(verifyToken); err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+		return
+	}
+
+	if err := user.SendVeryfyTokenEmail(verifyToken); err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError, "Can't send email: "+err.Error())
+		return
+	}
+
 	utils.WriteMessageResponse(&w, http.StatusCreated, http.StatusText(http.StatusCreated))
 }
 
@@ -149,6 +169,50 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := model.UpdateUser(&model.User{Email: session.Email}, update); err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+			http.StatusText(http.StatusInternalServerError)+": "+err.Error())
+		return
+	}
+
+	utils.WriteMessageResponse(&w, http.StatusOK, http.StatusText(http.StatusOK))
+}
+
+func VerifyUser(w http.ResponseWriter, r *http.Request) {
+	verifyTokenParam, err := GetUrlParamValue(r, "verifyToken")
+	if err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+			http.StatusText(http.StatusInternalServerError))
+		return
+	}
+
+	query := &model.VerifyToken{
+		Token: verifyTokenParam,
+	}
+
+	verifyToken, err := model.GetVerifyToken(query)
+	if err != nil {
+		utils.WriteMessageResponse(&w, http.StatusNotFound,
+			http.StatusText(http.StatusNotFound))
+		return
+	}
+
+	user, err := model.GetUser(&model.User{Email: verifyToken.Email})
+	if err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+		return
+	}
+	if user.Verified {
+		utils.WriteMessageResponse(&w, http.StatusConflict, "User already verified")
+		return
+	}
+
+	update := &model.User{
+		Verified: true,
+	}
+	if err := model.UpdateUser(&model.User{Email: verifyToken.Email}, update); err != nil {
 		ilog.Error(err)
 		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
 			http.StatusText(http.StatusInternalServerError)+": "+err.Error())

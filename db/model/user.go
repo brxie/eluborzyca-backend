@@ -17,6 +17,7 @@ type User struct {
 	Village    string             `bson:"village,omitempty" json:"village,omitempty"`
 	HomeNumber string             `bson:"homeNumber,omitempty" json:"homeNumber,omitempty"`
 	Phone      string             `bson:"phone,omitempty" json:"phone,omitempty"`
+	Verified   bool               `bson:"verified,omitempty" json:"verified,omitempty"`
 	Created    time.Time          `bson:"created,omitempty" json:"created,omitempty"`
 }
 

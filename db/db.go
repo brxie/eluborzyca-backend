@@ -113,6 +113,20 @@ func initializeModel() error {
 		return err
 	}
 
+	// verify_tokens collection
+	collection = DB.Collection("verify_tokens")
+
+	tokenTTL = 3600 * 24 // 24h
+	model = mongo.IndexModel{
+		Keys: bson.M{
+			"created": 1, // index in ascending order
+		}, Options: &options.IndexOptions{ExpireAfterSeconds: &tokenTTL},
+	}
+	_, err = collection.Indexes().CreateOne(ctx, model)
+	if err != nil {
+		return err
+	}
+
 	return nil
 
 }

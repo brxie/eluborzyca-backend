@@ -267,23 +267,6 @@ func CreateItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// var images []model.Image
-	// for _, val := range itemRequest.Images {
-	// 	id, err := primitive.ObjectIDFromHex(val)
-	// 	if err != nil {
-	// 		ilog.Warn(err)
-	// 		utils.WriteMessageResponse(&w, http.StatusBadRequest, "Wrong image id")
-	// 		return
-	// 	}
-	// 	image, err := model.GetImage(&model.Image{ID: id})
-	// 	if err != nil {
-	// 		ilog.Warn(err)
-	// 		utils.WriteMessageResponse(&w, http.StatusBadRequest, "Image doesn't exists")
-	// 		return
-	// 	}
-	// 	images = append(images, *image)
-	// }
-
 	item := &model.Item{
 		Name:          itemRequest.Name,
 		Owner:         session.Email,
@@ -298,6 +281,7 @@ func CreateItem(w http.ResponseWriter, r *http.Request) {
 		Description:   itemRequest.Description,
 		Images:        itemRequest.Images,
 		Created:       time.Now(),
+		Active:        true,
 		Popular:       true,
 	}
 	if err := model.InsertItem(item); err != nil {

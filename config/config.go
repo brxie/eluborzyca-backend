@@ -16,6 +16,17 @@ func init() {
 	initDBconfig()
 	initCommonConfig()
 	initSessionTTL()
+	initEmailConfig()
+}
+
+func initCommonConfig() {
+	Viper.BindEnv("CORS_ALLOWED_ORIGIN")
+	Viper.SetDefault("CORS_ALLOWED_ORIGIN", "*")
+	Viper.BindEnv("BIND_ADDRESS")
+	Viper.SetDefault("BIND_ADDRESS", ":4000")
+	Viper.BindEnv("UPLOAD_DIR")
+	Viper.SetDefault("UPLOAD_DIR", "/tmp")
+	Viper.BindEnv("FRONTEND_URL")
 }
 
 func initLoggerConfig() {
@@ -31,13 +42,15 @@ func initDBconfig() {
 	Viper.BindEnv("DB_NAME")
 }
 
-func initCommonConfig() {
-	Viper.BindEnv("CORS_ALLOWED_ORIGIN")
-	Viper.SetDefault("CORS_ALLOWED_ORIGIN", "*")
-	Viper.BindEnv("BIND_ADDRESS")
-	Viper.SetDefault("BIND_ADDRESS", ":4000")
-	Viper.BindEnv("UPLOAD_DIR")
-	Viper.SetDefault("UPLOAD_DIR", "/tmp")
+func initEmailConfig() {
+	Viper.BindEnv("SMTP_HOST")
+	Viper.BindEnv("SMTP_PORT")
+	Viper.SetDefault("SMTP_PORT", 587)
+	Viper.BindEnv("SMTP_USER")
+	Viper.BindEnv("SMTP_PASSWORD")
+	Viper.BindEnv("SMTP_SENDER_NAME")
+	Viper.SetDefault("SMTP_SENDER_NAME", "kontakt@ebazarek.pl")
+	Viper.BindEnv("SMTP_SKIP_CERT_CHECK")
 }
 
 func initSessionTTL() {

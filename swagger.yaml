@@ -27,16 +27,25 @@ paths:
                 email:
                   type: string
                   format: email
-                  maxLength: 50
                 password:
                   type: string
-                  minLength: 3
-                  maxLength: 100
       responses:
         '200':
           description: OK
     delete:
       operationId: DestroySession
+      responses:
+        '200':
+          description: OK
+  /user/verify/{verifyToken}:
+    post:
+      operationId: VerifyUser
+      parameters:
+        - in: path
+          name: verifyToken
+          schema:
+            type: string
+          required: true
       responses:
         '200':
           description: OK
