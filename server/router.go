@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/brxie/ebazarek-backend/config"
-	"github.com/brxie/ebazarek-backend/utils"
-	"github.com/brxie/ebazarek-backend/utils/ilog"
+	"github.com/brxie/eluborzyca-backend/config"
+	"github.com/brxie/eluborzyca-backend/utils"
+	"github.com/brxie/eluborzyca-backend/utils/ilog"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/getkin/kin-openapi/openapi3filter"
 )

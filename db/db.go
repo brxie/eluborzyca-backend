@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/brxie/ebazarek-backend/config"
-	"github.com/brxie/ebazarek-backend/utils/ilog"
+	"github.com/brxie/eluborzyca-backend/config"
+	"github.com/brxie/eluborzyca-backend/utils/ilog"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"

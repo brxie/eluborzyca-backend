@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/brxie/ebazarek-backend/controller/user"
-	"github.com/brxie/ebazarek-backend/db/model"
-	"github.com/brxie/ebazarek-backend/utils"
-	"github.com/brxie/ebazarek-backend/utils/ilog"
+	"github.com/brxie/eluborzyca-backend/controller/user"
+	"github.com/brxie/eluborzyca-backend/db/model"
+	"github.com/brxie/eluborzyca-backend/utils"
+	"github.com/brxie/eluborzyca-backend/utils/ilog"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/mongo"
 )

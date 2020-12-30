@@ -38,7 +38,7 @@ func initDBconfig() {
 	Viper.BindEnv("DB_ADDR")
 	Viper.SetDefault("DB_PORT", 27017)
 	Viper.BindEnv("DB_PORT")
-	Viper.SetDefault("DB_NAME", "ebazarek")
+	Viper.SetDefault("DB_NAME", "eluborzyca")
 	Viper.BindEnv("DB_NAME")
 }
 
@@ -49,7 +49,7 @@ func initEmailConfig() {
 	Viper.BindEnv("SMTP_USER")
 	Viper.BindEnv("SMTP_PASSWORD")
 	Viper.BindEnv("SMTP_SENDER_NAME")
-	Viper.SetDefault("SMTP_SENDER_NAME", "kontakt@ebazarek.pl")
+	Viper.SetDefault("SMTP_SENDER_NAME", "kontakt@e-luborzyca.pl")
 	Viper.BindEnv("SMTP_SKIP_CERT_CHECK")
 }
 

@@ -6,7 +6,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/brxie/ebazarek-backend/db/model"
+	"github.com/brxie/eluborzyca-backend/db/model"
 )
 
 const sessionTokenLen = 256

@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"html/template"
 
-	"github.com/brxie/ebazarek-backend/config"
-	"github.com/brxie/ebazarek-backend/db/model"
-	"github.com/brxie/ebazarek-backend/utils/ilog"
+	"github.com/brxie/eluborzyca-backend/config"
+	"github.com/brxie/eluborzyca-backend/db/model"
+	"github.com/brxie/eluborzyca-backend/utils/ilog"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/gomail.v2"
 )

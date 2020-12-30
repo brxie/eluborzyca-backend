@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/brxie/ebazarek-backend/config"
+	"github.com/brxie/eluborzyca-backend/config"
 	log "github.com/sirupsen/logrus"
 )
 

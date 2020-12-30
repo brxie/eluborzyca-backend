@@ -1,4 +1,4 @@
-module github.com/brxie/ebazarek-backend
+module github.com/brxie/eluborzyca-backend
 
 go 1.14
 

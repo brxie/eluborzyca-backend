@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/brxie/ebazarek-backend/config"
-	_ "github.com/brxie/ebazarek-backend/db"
-	"github.com/brxie/ebazarek-backend/utils/ilog"
+	"github.com/brxie/eluborzyca-backend/config"
+	_ "github.com/brxie/eluborzyca-backend/db"
+	"github.com/brxie/eluborzyca-backend/utils/ilog"
 	"github.com/rs/cors"
 
-	"github.com/brxie/ebazarek-backend/server"
+	"github.com/brxie/eluborzyca-backend/server"
 )
 
 func main() {

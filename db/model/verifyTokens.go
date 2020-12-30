@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/brxie/ebazarek-backend/db"
+	"github.com/brxie/eluborzyca-backend/db"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

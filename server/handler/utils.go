@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/brxie/ebazarek-backend/config"
-	"github.com/brxie/ebazarek-backend/controller/session"
-	"github.com/brxie/ebazarek-backend/db/model"
+	"github.com/brxie/eluborzyca-backend/config"
+	"github.com/brxie/eluborzyca-backend/controller/session"
+	"github.com/brxie/eluborzyca-backend/db/model"
 )
 
 func setCookie(w *http.ResponseWriter, name, value string, expire time.Time) {

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/brxie/ebazarek-backend/controller/session"
-	"github.com/brxie/ebazarek-backend/db/model"
+	"github.com/brxie/eluborzyca-backend/controller/session"
+	"github.com/brxie/eluborzyca-backend/db/model"
 	"github.com/getkin/kin-openapi/openapi3filter"
 )
 

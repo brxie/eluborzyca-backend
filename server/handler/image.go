@@ -12,9 +12,9 @@ import (
 
 	"net/url"
 
-	"github.com/brxie/ebazarek-backend/controller/image"
-	"github.com/brxie/ebazarek-backend/utils"
-	"github.com/brxie/ebazarek-backend/utils/ilog"
+	"github.com/brxie/eluborzyca-backend/controller/image"
+	"github.com/brxie/eluborzyca-backend/utils"
+	"github.com/brxie/eluborzyca-backend/utils/ilog"
 )
 
 type UploadResponse struct {

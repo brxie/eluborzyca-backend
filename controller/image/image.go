@@ -12,7 +12,7 @@ import (
 	"image/jpeg"
 	"image/png"
 
-	"github.com/brxie/ebazarek-backend/config"
+	"github.com/brxie/eluborzyca-backend/config"
 	"github.com/nfnt/resize"
 )
 

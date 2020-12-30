@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/brxie/ebazarek-backend/db/model"
-	"github.com/brxie/ebazarek-backend/utils"
-	"github.com/brxie/ebazarek-backend/utils/ilog"
+	"github.com/brxie/eluborzyca-backend/db/model"
+	"github.com/brxie/eluborzyca-backend/utils"
+	"github.com/brxie/eluborzyca-backend/utils/ilog"
 )
 
 func GetItems(w http.ResponseWriter, r *http.Request) {
