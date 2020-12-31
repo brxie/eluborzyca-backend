@@ -74,7 +74,7 @@ func SendVeryfyTokenEmail(token *model.VerifyToken) error {
 		return err
 	}
 
-	t, err := template.ParseFiles(path.Join(ex, "verifyTokenEmail.html"))
+	t, err := template.ParseFiles(path.Join(path.Dir(ex), "verifyTokenEmail.html"))
 	if err != nil {
 		return err
 	}

@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Owoce",
+        "icon": "arrow_forward"
+    },
+    {
+        "name": "Warzywa",
+        "icon": "arrow_forward"
+    },
+    {
+        "name": "Przetwory",
+        "icon": "arrow_forward"
+    },
+    {
+        "name": "Miody",
+        "icon": "arrow_forward"
+    },
+    {
+        "name": "Inne",
+        "icon": "arrow_forward"
+    }
+]
