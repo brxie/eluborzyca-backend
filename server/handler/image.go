@@ -93,18 +93,18 @@ func UploadImage(w http.ResponseWriter, r *http.Request) {
 	for fileName, bytes := range imageBytes {
 		result, err := image.UploadImage(fileName, bytes)
 
-		response = UploadResponse{
-			Path:            result.Path,
-			ThumbnailPath:   result.ThumbnailPath,
-			ThumbnailWidth:  result.ThumbnailWidth,
-			ThumbnailHeight: result.ThumbnailHeight,
-		}
-
 		if err != nil {
 			ilog.Error(err)
 			utils.WriteMessageResponse(&w, http.StatusInternalServerError,
 				http.StatusText(http.StatusInternalServerError))
 			return
+		}
+
+		response = UploadResponse{
+			Path:            result.Path,
+			ThumbnailPath:   result.ThumbnailPath,
+			ThumbnailWidth:  result.ThumbnailWidth,
+			ThumbnailHeight: result.ThumbnailHeight,
 		}
 		// only single image in one request is supported. Other images
 		// will be ignored.

@@ -10,10 +10,10 @@ import (
 
 func GetItems(query *Item) ([]Item, error) {
 	var (
-		err   error
-		items []Item
-		doc   *bson.M
+		err error
+		doc *bson.M
 	)
+	items := make([]Item, 0)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

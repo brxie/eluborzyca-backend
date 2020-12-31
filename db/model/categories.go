@@ -10,10 +10,10 @@ import (
 
 func GetCategories(query *Category) ([]Category, error) {
 	var (
-		err        error
-		categories []Category
-		doc        *bson.M
+		err error
+		doc *bson.M
 	)
+	categories := make([]Category, 0)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

@@ -10,10 +10,10 @@ import (
 
 func GetVillages(query *Village) ([]Village, error) {
 	var (
-		err      error
-		villages []Village
-		doc      *bson.M
+		err error
+		doc *bson.M
 	)
+	villages := make([]Village, 0)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

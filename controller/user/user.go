@@ -58,10 +58,9 @@ func SendVeryfyTokenEmail(token *model.VerifyToken) error {
 	pass := config.Viper.GetString("SMTP_PASSWORD")
 	sender := config.Viper.GetString("SMTP_SENDER_NAME")
 	tokenURL := config.Viper.GetString("FRONTEND_URL") + "/user-verify"
-	skipCertCheck := config.Viper.GetBool("SMTP_PASSWORD")
 
 	d := gomail.NewDialer(host, port, user, pass)
-	d.TLSConfig = &tls.Config{InsecureSkipVerify: skipCertCheck}
+	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
 	m := gomail.NewMessage()
 

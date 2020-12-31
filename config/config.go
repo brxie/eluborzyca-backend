@@ -50,7 +50,6 @@ func initEmailConfig() {
 	Viper.BindEnv("SMTP_PASSWORD")
 	Viper.BindEnv("SMTP_SENDER_NAME")
 	Viper.SetDefault("SMTP_SENDER_NAME", "kontakt@e-luborzyca.pl")
-	Viper.BindEnv("SMTP_SKIP_CERT_CHECK")
 }
 
 func initSessionTTL() {

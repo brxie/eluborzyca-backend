@@ -10,10 +10,10 @@ import (
 
 func GetUnits(query *Unit) ([]Unit, error) {
 	var (
-		err   error
-		units []Unit
-		doc   *bson.M
+		err error
+		doc *bson.M
 	)
+	units := make([]Unit, 0)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
