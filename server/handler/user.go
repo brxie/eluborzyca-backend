@@ -16,13 +16,15 @@ import (
 )
 
 type UserRequest struct {
-	Email       string
-	NewPassword string
-	Password    string
-	Username    string
-	Village     string
-	HomeNumber  string
-	Phone       string
+	Email        string
+	NewPassword  string
+	Password     string
+	Username     string
+	Village      string
+	HomeNumber   string
+	AddressNotes string
+	Street       string
+	Phone        string
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
@@ -77,13 +79,15 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = model.InsertUser(&model.User{
-		Email:      userRequest.Email,
-		Password:   passwdCipher,
-		Username:   userRequest.Username,
-		Village:    userRequest.Village,
-		HomeNumber: userRequest.HomeNumber,
-		Phone:      userRequest.Phone,
-		Created:    time.Now(),
+		Email:        userRequest.Email,
+		Password:     passwdCipher,
+		Username:     userRequest.Username,
+		Village:      userRequest.Village,
+		HomeNumber:   userRequest.HomeNumber,
+		AddressNotes: userRequest.AddressNotes,
+		Street:       userRequest.Street,
+		Phone:        userRequest.Phone,
+		Created:      time.Now(),
 	})
 
 	if err != nil {
@@ -161,11 +165,13 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	update := &model.User{
-		Username:   userRequest.Username,
-		Village:    userRequest.Village,
-		HomeNumber: userRequest.HomeNumber,
-		Phone:      userRequest.Phone,
-		Password:   userRequest.NewPassword,
+		Username:     userRequest.Username,
+		Village:      userRequest.Village,
+		HomeNumber:   userRequest.HomeNumber,
+		AddressNotes: userRequest.AddressNotes,
+		Street:       userRequest.Street,
+		Phone:        userRequest.Phone,
+		Password:     userRequest.NewPassword,
 	}
 
 	if err := model.UpdateUser(&model.User{Email: session.Email}, update); err != nil {

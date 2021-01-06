@@ -27,6 +27,12 @@ func initCommonConfig() {
 	Viper.BindEnv("UPLOAD_DIR")
 	Viper.SetDefault("UPLOAD_DIR", "/tmp")
 	Viper.BindEnv("FRONTEND_URL")
+	Viper.BindEnv("DEFAULT_ITEM_IMAGE_URL")
+	Viper.SetDefault("DEFAULT_ITEM_IMAGE_URL", "https://nhncwtttsf-flywheel.netdna-ssl.com/6/wp-content/uploads/sites/29/2019/01/Eat-Vegetables.jpg")
+	Viper.BindEnv("DEFAULT_ITEM_IMAGE_THUMB_WIDTH")
+	Viper.SetDefault("DEFAULT_ITEM_IMAGE_THUMB_WIDTH", 200)
+	Viper.BindEnv("DEFAULT_ITEM_IMAGE_THUMB_HEIGHT")
+	Viper.SetDefault("DEFAULT_ITEM_IMAGE_THUMB_HEIGHT", 120)
 }
 
 func initLoggerConfig() {

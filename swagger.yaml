@@ -26,7 +26,6 @@ paths:
               properties:
                 email:
                   type: string
-                  format: email
                 password:
                   type: string
       responses:
@@ -102,10 +101,16 @@ paths:
                   type: string
                 homeNumber:
                   type: string
-                  maxLength: 10
+                  maxLength: 20
+                addressNotes:
+                  type: string
+                  maxLength: 200
+                street:
+                  type: string
+                  maxLength: 50
                 phone:
                   type: string
-                  maxLength: 20
+                  maxLength: 30
       responses:
         '200':
           description: OK
@@ -171,6 +176,10 @@ paths:
                   maximum: 4
                 firstLastName:
                   type: string
+                addressNotes:
+                  type: string
+                street:
+                  type: string
                 village:
                   type: string
                 homeNumber:
@@ -225,7 +234,6 @@ paths:
                 - availability
                 - firstLastName
                 - village
-                - homeNumber
                 - phone
                 - category
                 - description
@@ -244,6 +252,10 @@ paths:
                   minimum: 1
                   maximum: 4
                 firstLastName:
+                  type: string
+                addressNotes:
+                  type: string
+                street:
                   type: string
                 village:
                   type: string

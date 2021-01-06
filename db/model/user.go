@@ -10,15 +10,17 @@ import (
 )
 
 type User struct {
-	ID         primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
-	Email      string             `bson:"email,omitempty" json:"email,omitempty"`
-	Password   string             `bson:"password,omitempty" json:"password,omitempty"`
-	Username   string             `bson:"username,omitempty" json:"username,omitempty"`
-	Village    string             `bson:"village,omitempty" json:"village,omitempty"`
-	HomeNumber string             `bson:"homeNumber,omitempty" json:"homeNumber,omitempty"`
-	Phone      string             `bson:"phone,omitempty" json:"phone,omitempty"`
-	Verified   bool               `bson:"verified,omitempty" json:"verified,omitempty"`
-	Created    time.Time          `bson:"created,omitempty" json:"created,omitempty"`
+	ID           primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
+	Email        string             `bson:"email,omitempty" json:"email,omitempty"`
+	Password     string             `bson:"password,omitempty" json:"password,omitempty"`
+	Username     string             `bson:"username,omitempty" json:"username,omitempty"`
+	Village      string             `bson:"village,omitempty" json:"village,omitempty"`
+	HomeNumber   string             `bson:"homeNumber,omitempty" json:"homeNumber,omitempty"`
+	AddressNotes string             `bson:"addressNotes,omitempty" json:"addressNotes,omitempty"`
+	Street       string             `bson:"street,omitempty" json:"street,omitempty"`
+	Phone        string             `bson:"phone,omitempty" json:"phone,omitempty"`
+	Verified     bool               `bson:"verified,omitempty" json:"verified,omitempty"`
+	Created      time.Time          `bson:"created,omitempty" json:"created,omitempty"`
 }
 
 const UsersCollectionName = "users"

@@ -17,6 +17,8 @@ type Item struct {
 	Unit          string             `bson:"unit,omitempty" json:"unit,omitempty"`
 	Availability  int                `bson:"availability,omitempty" json:"availability,omitempty"`
 	FirstLastName string             `bson:"firstLastName,omitempty" json:"firstLastName,omitempty"`
+	AddressNotes  string             `bson:"addressNotes,omitempty" json:"addressNotes,omitempty"`
+	Street        string             `bson:"street,omitempty" json:"street,omitempty"`
 	Village       string             `bson:"village,omitempty" json:"village,omitempty"`
 	HomeNumber    string             `bson:"homeNumber,omitempty" json:"homeNumber,omitempty"`
 	Phone         string             `bson:"phone,omitempty" json:"phone,omitempty"`
@@ -36,11 +38,20 @@ type ItemUpdate struct {
 	Unit          string             `bson:"unit,omitempty" json:"unit,omitempty"`
 	Availability  int                `bson:"availability,omitempty" json:"availability,omitempty"`
 	FirstLastName string             `bson:"firstLastName,omitempty" json:"firstLastName,omitempty"`
+	AddressNotes  string             `bson:"addressNotes,omitempty" json:"addressNotes,omitempty"`
+	Street        string             `bson:"street,omitempty" json:"street,omitempty"`
 	Village       string             `bson:"village,omitempty" json:"village,omitempty"`
 	HomeNumber    string             `bson:"homeNumber,omitempty" json:"homeNumber,omitempty"`
 	Phone         string             `bson:"phone,omitempty" json:"phone,omitempty"`
 	Category      string             `bson:"category,omitempty" json:"category,omitempty"`
 	Description   string             `bson:"description,omitempty" json:"description,omitempty"`
+}
+
+type Image struct {
+	Src             string `bson:"src,omitempty" json:"src,omitempty"`
+	Thumbnail       string `bson:"thumbnail,omitempty" json:"thumbnail,omitempty"`
+	ThumbnailWidth  int    `bson:"thumbnailWidth,omitempty" json:"thumbnailWidth,omitempty"`
+	ThumbnailHeight int    `bson:"thumbnailHeight,omitempty" json:"thumbnailHeight,omitempty"`
 }
 
 type ItemActivate struct {

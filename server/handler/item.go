@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/brxie/eluborzyca-backend/config"
 	"github.com/brxie/eluborzyca-backend/db/model"
 	"github.com/brxie/eluborzyca-backend/utils"
 	"github.com/brxie/eluborzyca-backend/utils/ilog"
@@ -18,6 +19,8 @@ type ItemRequest struct {
 	Unit          string
 	Availability  int
 	FirstLastName string
+	AddressNotes  string
+	Street        string
 	Village       string
 	HomeNumber    string
 	Phone         string
@@ -32,6 +35,8 @@ type ItemRequestUpdate struct {
 	Unit          string
 	Availability  int
 	FirstLastName string
+	AddressNotes  string
+	Street        string
 	Village       string
 	HomeNumber    string
 	Phone         string
@@ -152,6 +157,8 @@ func UpdateItem(w http.ResponseWriter, r *http.Request) {
 		Unit:          itemRequest.Unit,
 		Availability:  itemRequest.Availability,
 		FirstLastName: itemRequest.FirstLastName,
+		AddressNotes:  itemRequest.AddressNotes,
+		Street:        itemRequest.Street,
 		Village:       itemRequest.Village,
 		HomeNumber:    itemRequest.HomeNumber,
 		Phone:         itemRequest.Phone,
@@ -267,6 +274,17 @@ func CreateItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// if any image is not set we need to set a default one
+	if len(itemRequest.Images) == 0 {
+		defaultImage := &model.Image{
+			Src:             config.Viper.GetString("DEFAULT_ITEM_IMAGE_URL"),
+			Thumbnail:       config.Viper.GetString("DEFAULT_ITEM_IMAGE_URL"),
+			ThumbnailWidth:  config.Viper.GetInt("DEFAULT_ITEM_IMAGE_THUMB_WIDTH"),
+			ThumbnailHeight: config.Viper.GetInt("DEFAULT_ITEM_IMAGE_THUMB_HEIGHT"),
+		}
+		itemRequest.Images = append(itemRequest.Images, *defaultImage)
+	}
+
 	item := &model.Item{
 		Name:          itemRequest.Name,
 		Owner:         session.Email,
@@ -274,6 +292,8 @@ func CreateItem(w http.ResponseWriter, r *http.Request) {
 		Unit:          itemRequest.Unit,
 		Availability:  itemRequest.Availability,
 		FirstLastName: itemRequest.FirstLastName,
+		AddressNotes:  itemRequest.AddressNotes,
+		Street:        itemRequest.Street,
 		Village:       itemRequest.Village,
 		HomeNumber:    itemRequest.HomeNumber,
 		Phone:         itemRequest.Phone,
