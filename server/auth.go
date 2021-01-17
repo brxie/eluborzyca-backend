@@ -8,6 +8,7 @@ import (
 	"github.com/brxie/eluborzyca-backend/controller/session"
 	"github.com/brxie/eluborzyca-backend/db/model"
 	"github.com/getkin/kin-openapi/openapi3filter"
+	fb "github.com/huandu/facebook/v2"
 )
 
 func (err *SessionError) Error() string {
@@ -35,6 +36,15 @@ func extractSession(c context.Context, input *openapi3filter.AuthenticationInput
 	session, err := session.DecodeSession(cookie.Value)
 	if err != nil {
 		return &SessionError{http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized}
+	}
+
+	if session.FacebbokID != "" {
+		fbSession := &fb.Session{}
+		fbSession.SetAccessToken(session.Token)
+		if err := fbSession.Validate(); err != nil {
+			return err
+		}
+		return nil
 	}
 
 	_, err = model.GetSession(&model.Session{Token: session.Token, Email: session.Email})

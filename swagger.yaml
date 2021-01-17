@@ -5,6 +5,40 @@ info:
 servers:
   - url: /api/v1
 paths:
+  /facebook-session:
+    post:
+      operationId: NewFacebookSession
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:                 
+                - email                
+                - accessToken
+                - data_access_expiration_time
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                id:
+                  type: string
+                accessToken:
+                  type: string
+                userID:
+                  type: string
+                expiresIn:
+                  type: integer
+                signedRequest:
+                  type: string
+                graphDomain:
+                  type: string
+                data_access_expiration_time:
+                  type: integer
+      responses:
+        '200':
+          description: OK
   /session:
     get:
       security:

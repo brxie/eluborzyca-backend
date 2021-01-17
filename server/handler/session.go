@@ -12,11 +12,24 @@ import (
 	"github.com/brxie/eluborzyca-backend/db/model"
 	"github.com/brxie/eluborzyca-backend/utils"
 	"github.com/brxie/eluborzyca-backend/utils/ilog"
+	fb "github.com/huandu/facebook/v2"
 )
 
 type SessionRequest struct {
 	Email    string
 	Password string
+}
+
+type FacebookSessionRequest struct {
+	Name                     string `json:"name"`
+	Email                    string `json:"email"`
+	ID                       string `json:"id"`
+	AccessToken              string `json:"accessToken"`
+	UserID                   string `json:"userID"`
+	ExpiresIn                int    `json:"expiresIn"`
+	SignedRequest            string `json:"signedRequest"`
+	GraphDomain              string `json:"graphDomain"`
+	DataAccessExpirationTime int    `json:"data_access_expiration_time"`
 }
 
 const sessionCookieKey = "SESSION_ID"
@@ -82,6 +95,56 @@ func NewSession(w http.ResponseWriter, r *http.Request) {
 	expire := time.Now().Add(time.Duration(ttl * int64(time.Second)))
 
 	setCookie(&w, sessionCookieKey, sessionToken, expire)
+	utils.WriteMessageResponse(&w, http.StatusOK, http.StatusText(http.StatusOK))
+}
+
+func NewFacebookSession(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+			http.StatusText(http.StatusInternalServerError)+err.Error())
+		return
+	}
+	var facebookSessionRequest FacebookSessionRequest
+	if err := json.Unmarshal(body, &facebookSessionRequest); err != nil {
+		utils.WriteMessageResponse(&w, http.StatusUnauthorized,
+			http.StatusText(http.StatusUnauthorized)+": "+err.Error())
+		return
+	}
+
+	fbSession := &fb.Session{}
+	fbSession.SetAccessToken(facebookSessionRequest.AccessToken)
+	if err := fbSession.Validate(); err != nil {
+		utils.WriteMessageResponse(&w, http.StatusUnauthorized,
+			http.StatusText(http.StatusUnauthorized)+": "+err.Error())
+		return
+	}
+
+	if err := user.CreateIfNotExist(&model.User{
+		Email:      facebookSessionRequest.Email,
+		Username:   facebookSessionRequest.Name,
+		FacebookID: facebookSessionRequest.UserID,
+		Verified:   true,
+		Created:    time.Now(),
+	}); err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+			http.StatusText(http.StatusInternalServerError)+" "+err.Error())
+		return
+	}
+
+	sessionToken, err := session.NewFacebookSession(facebookSessionRequest.Email,
+		facebookSessionRequest.AccessToken, facebookSessionRequest.UserID)
+	if err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+			http.StatusText(http.StatusInternalServerError)+" "+err.Error())
+		return
+	}
+
+	expireTime := time.Unix(int64(facebookSessionRequest.DataAccessExpirationTime), 0)
+	setCookie(&w, sessionCookieKey, sessionToken, expireTime)
 	utils.WriteMessageResponse(&w, http.StatusOK, http.StatusText(http.StatusOK))
 }
 

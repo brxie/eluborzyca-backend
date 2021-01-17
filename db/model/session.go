@@ -10,9 +10,10 @@ import (
 
 // Session represents user session
 type Session struct {
-	Token   string    `bson:"token,omitempty" json:"token,omitempty"`
-	Email   string    `bson:"email,omitempty" json:"email,omitempty"`
-	Created time.Time `bson:"created,omitempty" json:"created,omitempty"`
+	Token      string    `bson:"token,omitempty" json:"token,omitempty"`
+	Email      string    `bson:"email,omitempty" json:"email,omitempty"`
+	FacebbokID string    `bson:"facebook_id,omitempty" json:"facebook_id,omitempty"`
+	Created    time.Time `bson:"created,omitempty" json:"created,omitempty"`
 }
 
 const SessionsCollectionName = "sessions"

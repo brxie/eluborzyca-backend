@@ -8,9 +8,10 @@ import (
 
 var Handlers = map[string]func(http.ResponseWriter, *http.Request){
 	// session
-	"GetSession":     handler.GetSession,
-	"NewSession":     handler.NewSession,
-	"DestroySession": handler.DestroySession,
+	"GetSession":         handler.GetSession,
+	"NewSession":         handler.NewSession,
+	"NewFacebookSession": handler.NewFacebookSession,
+	"DestroySession":     handler.DestroySession,
 
 	// user
 	"GetUser":    handler.GetUser,

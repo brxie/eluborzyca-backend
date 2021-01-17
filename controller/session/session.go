@@ -19,6 +19,25 @@ func NewSession(email string) (string, error) {
 		Token:   token,
 	}
 	err := model.InsertSession(session)
+	if err != nil {
+		return "", err
+	}
+
+	sessionString, err := json.Marshal(session)
+	if err != nil {
+		return "", err
+	}
+
+	return base64.StdEncoding.EncodeToString(sessionString), err
+}
+
+func NewFacebookSession(email, token, id string) (string, error) {
+	session := &model.Session{
+		Email:      email,
+		FacebbokID: id,
+		Created:    time.Now(),
+		Token:      token,
+	}
 
 	sessionString, err := json.Marshal(session)
 	if err != nil {
@@ -35,11 +54,17 @@ func GetSession(token string) (*model.Session, error) {
 	return model.GetSession(session)
 }
 
-func DestroySession(token string) error {
-	session := &model.Session{
-		Token: token,
+func DestroySession(session *model.Session) error {
+
+	if session.FacebbokID != "" {
+		// TODO: call facebook API and request session destroy should be done here?
+		return nil
 	}
-	return model.DestroySession(session)
+
+	s := &model.Session{
+		Token: session.Token,
+	}
+	return model.DestroySession(s)
 }
 
 func DecodeSession(token string) (*model.Session, error) {

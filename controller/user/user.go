@@ -19,6 +19,15 @@ type EmailTemplate struct {
 	URL, Token string
 }
 
+func CreateIfNotExist(user *model.User) error {
+	_, err := model.GetUser(&model.User{Email: user.Email})
+	if err == nil {
+		return nil
+	}
+
+	return model.InsertUser(user)
+}
+
 func CheckPassword(email, password string) error {
 	user, err := model.GetUser(&model.User{Email: email})
 	if err != nil {
