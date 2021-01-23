@@ -154,6 +154,18 @@ paths:
       responses:
         '200':
           description: OK
+  /item/open-graph/{itemID}:
+    get:
+      operationId: GetItemOpenGraph
+      parameters:
+        - in: path
+          name: itemID
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
   /item/{itemID}:
     get:
       operationId: GetItem

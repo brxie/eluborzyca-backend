@@ -20,6 +20,10 @@ func init() {
 }
 
 func initCommonConfig() {
+	Viper.BindEnv("WEBSITE_URL")
+	Viper.SetDefault("WEBSITE_URL", "https://e-luborzyca.pl")
+	Viper.BindEnv("FACEBOOK_APP_ID")
+	Viper.SetDefault("FACEBOOK_APP_ID", "185682693244772")
 	Viper.BindEnv("CORS_ALLOWED_ORIGIN")
 	Viper.SetDefault("CORS_ALLOWED_ORIGIN", "*")
 	Viper.BindEnv("BIND_ADDRESS")

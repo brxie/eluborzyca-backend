@@ -159,7 +159,7 @@ func DestroySession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := session.DestroySession(s.Token); err != nil {
+	if err := session.DestroySession(s); err != nil {
 		ilog.Error(err)
 	}
 

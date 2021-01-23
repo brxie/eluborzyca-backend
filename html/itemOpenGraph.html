@@ -1,0 +1,15 @@
+<html>
+	<head>
+        <title>{{.Title}}</title> <!-- ˜60 chars -->
+        <meta property="fb:app_id" content="{{.FacebookAppID}}" />
+        <meta name="description" content="{{.Description}}"> <!-- ˜150 chars -->
+        <meta property="og:title" content="{{.Title}}">
+        <meta property="og:description" content="{{.Description}}"> <!-- ˜300 chars -->
+        <meta property="og:site_name" content="e-luborzyca">
+        <meta property="og:locale" content="pl_PL">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{.APIURL}}">
+        <meta property="og:image" content="{{.ImageURL}}"> <!-- 200x200px - 1200x1200px -->
+        <meta http-equiv="REFRESH" content="0; url={{.RedirectURL}}"> <!-- redirect url -->
+	</head>
+</html>

@@ -20,11 +20,12 @@ var Handlers = map[string]func(http.ResponseWriter, *http.Request){
 	"VerifyUser": handler.VerifyUser,
 
 	// item
-	"GetItem":      handler.GetItem,
-	"CreateItem":   handler.CreateItem,
-	"ActivateItem": handler.ActivateItem,
-	"UpdateItem":   handler.UpdateItem,
-	"DeleteItem":   handler.DeleteItem,
+	"GetItem":          handler.GetItem,
+	"CreateItem":       handler.CreateItem,
+	"ActivateItem":     handler.ActivateItem,
+	"UpdateItem":       handler.UpdateItem,
+	"DeleteItem":       handler.DeleteItem,
+	"GetItemOpenGraph": handler.GetItemOpenGraph,
 
 	// items
 	"GetItems": handler.GetItems,

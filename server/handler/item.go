@@ -1,9 +1,14 @@
 package handler
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
+	"html/template"
 	"io/ioutil"
 	"net/http"
+	"os"
+	"path"
 	"time"
 
 	"github.com/brxie/eluborzyca-backend/config"
@@ -42,6 +47,15 @@ type ItemRequestUpdate struct {
 	Phone         string
 	Category      string
 	Description   string
+}
+
+type OpenGraphTemplate struct {
+	Title         string
+	FacebookAppID string
+	Description   string
+	APIURL        string
+	ImageURL      string
+	RedirectURL   string
 }
 
 func GetItem(w http.ResponseWriter, r *http.Request) {
@@ -354,4 +368,66 @@ func DeleteItem(w http.ResponseWriter, r *http.Request) {
 			http.StatusText(http.StatusInternalServerError))
 	}
 	utils.WriteMessageResponse(&w, http.StatusOK, http.StatusText(http.StatusOK))
+}
+
+func GetItemOpenGraph(w http.ResponseWriter, r *http.Request) {
+	itemID, err := GetUrlParamValue(r, "itemID")
+	if err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+			http.StatusText(http.StatusInternalServerError))
+		return
+	}
+
+	id, err := primitive.ObjectIDFromHex(itemID)
+	if err != nil {
+		utils.WriteMessageResponse(&w, http.StatusNotFound,
+			http.StatusText(http.StatusNotFound))
+		return
+	}
+	item, err := model.GetItem(&model.Item{ID: id})
+	if err != nil {
+		utils.WriteMessageResponse(&w, http.StatusNotFound,
+			http.StatusText(http.StatusNotFound))
+		return
+	}
+
+	ex, err := os.Executable()
+	if err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+			http.StatusText(http.StatusInternalServerError))
+	}
+
+	t, err := template.ParseFiles(path.Join(path.Dir(ex), "html/itemOpenGraph.html"))
+	if err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+			http.StatusText(http.StatusInternalServerError))
+	}
+
+	apiURL := config.Viper.GetString("WEBSITE_URL") + path.Join("/api/v1/item/open-graph/", itemID)
+	recirectURL := config.Viper.GetString("WEBSITE_URL") + path.Join("/details/", itemID)
+	imageURL := ""
+	if len(item.Images) > 0 {
+		imageURL = item.Images[0].Src
+	}
+	templateData := &OpenGraphTemplate{
+		Title:         item.Name,
+		FacebookAppID: config.Viper.GetString("FACEBOOK_APP_ID"),
+		Description:   item.Description,
+		APIURL:        apiURL,
+		ImageURL:      imageURL,
+		RedirectURL:   recirectURL,
+	}
+
+	out := new(bytes.Buffer)
+	err = t.Execute(out, templateData)
+	if err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+			http.StatusText(http.StatusInternalServerError))
+	}
+
+	fmt.Fprint(w, out)
 }

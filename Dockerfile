@@ -6,7 +6,8 @@ RUN go build -o /server .
 
 FROM alpine:3.12.3
 COPY --from=build /src/swagger.yaml /app/
-COPY --from=build /src/verifyTokenEmail.html /app/
+COPY --from=build /src/html/verifyTokenEmail.html /app/html/
+COPY --from=build /src/html/itemOpenGraph.html /app/html/
 COPY --from=build /server /app/server
 
 CMD ["/app/server"]
