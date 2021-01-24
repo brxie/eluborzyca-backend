@@ -62,6 +62,7 @@ paths:
                   type: string
                 password:
                   type: string
+                  maxLength: 100
       responses:
         '200':
           description: OK
@@ -128,9 +129,10 @@ paths:
                   maxLength: 100
                 password:
                   type: string
+                  maxLength: 100
                 username:
                   type: string
-                  maxLength: 50
+                  maxLength: 100
                 village:
                   type: string
                 homeNumber:
