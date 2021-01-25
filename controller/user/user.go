@@ -75,7 +75,7 @@ func SendVeryfyTokenEmail(token *model.VerifyToken) error {
 
 	m.SetHeader("From", sender)
 	m.SetHeader("To", token.Email)
-	m.SetHeader("Subject", "Verify Token")
+	m.SetHeader("Subject", "e-luborzyca.pl - dokończ rejestrację")
 
 	ex, err := os.Executable()
 	if err != nil {
