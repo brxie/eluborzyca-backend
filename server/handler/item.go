@@ -248,6 +248,7 @@ func ActivateItem(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateItem(w http.ResponseWriter, r *http.Request) {
+	var itemsLimit = config.Viper.GetInt("USER_ITEMS_LIMIT")
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		ilog.Error(err)
@@ -270,6 +271,21 @@ func CreateItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// check for number of items limit for user
+	items, err := model.GetItems(&model.Item{Owner: session.Email})
+	if err != nil {
+		ilog.Error(err)
+		utils.WriteMessageResponse(&w, http.StatusInternalServerError,
+			http.StatusText(http.StatusInternalServerError))
+	}
+
+	if len(items) > itemsLimit {
+		utils.WriteMessageResponse(&w, http.StatusForbidden,
+			fmt.Sprintf("Can't create more that %d items", itemsLimit))
+		return
+	}
+
+	// validate parameters
 	if _, err := model.GetUnit(&model.Unit{Name: itemRequest.Unit}); err != nil {
 		ilog.Warn(err)
 		utils.WriteMessageResponse(&w, http.StatusBadRequest, "Unit doesn't exists")

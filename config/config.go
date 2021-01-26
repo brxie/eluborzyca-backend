@@ -37,6 +37,8 @@ func initCommonConfig() {
 	Viper.SetDefault("DEFAULT_ITEM_IMAGE_THUMB_WIDTH", 200)
 	Viper.BindEnv("DEFAULT_ITEM_IMAGE_THUMB_HEIGHT")
 	Viper.SetDefault("DEFAULT_ITEM_IMAGE_THUMB_HEIGHT", 120)
+	Viper.BindEnv("USER_ITEMS_LIMIT")
+	Viper.SetDefault("USER_ITEMS_LIMIT", 100)
 }
 
 func initLoggerConfig() {
